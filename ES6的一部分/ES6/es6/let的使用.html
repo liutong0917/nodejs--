@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <button type="button">按钮0</button>
+  <button type="button">按钮1</button>
+  <button type="button">按钮2</button>
+</body>
+<script>
+  /*
+  * let是  块级作用域
+  * 产生闭包--闭包的原理
+  *
+  * let是块级作用域,不进行声明提前
+  * */
+  var btns=document.getElementsByTagName("button");
+  for(let i=0;i<5;i++){
+    btns[i].onclick=function () {
+      alert(i);
+    }
+  }
+
+  /*
+  * let :是不进行变量提升的
+  * */
+  {
+    let a;
+    console.log(a);
+    a=56;
+  }
+ /* {
+    console.log(a);
+    let a=56;
+  }*/
+
+ /*
+ * let a=3;
+ * let a=7;
+ *
+ * 会报错,同一个作用域  不可以声明两个相同的变量
+ * 不会出现覆盖的
+ * */
+
+</script>
+</html>

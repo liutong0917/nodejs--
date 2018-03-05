@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#box div{
+				display: none;
+			}
+			.on{
+				background-color: red;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<input type="button"  value="国内新闻" />
+			<input type="button"  value="国际新闻" />
+			<input type="button"  value="我家新闻" />
+			<div style="display: block;">国内新闻</div>
+			<div>国际新闻</div>
+			<div>wolaojiaxinwen</div>
+		</div>
+		<div id="box1">
+			<input type="button"  value="国内新闻" />
+			<input type="button"  value="国内新闻" />
+			<input type="button"  value="国际新闻" />
+			<input type="button"  value="我家新闻" />
+			<div style="display: block;">国内新闻</div>
+			<div>国际新闻</div>
+			<div>国际新闻</div>
+			<div>wolaojiaxinwen</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	class Tab{
+		constructor(id){
+			this.oBox=document.getElementById(id);
+			this.oBtn=this.oBox.getElementsByTagName('input');
+			this.oDiv=this.oBox.getElementsByTagName('div');
+			this.oBtn[0].className='on';
+			this.init()
+		}
+		init(){			
+			for(let i=0;i<this.oBtn.length;i++){
+				this.oBtn[i].onclick=()=>{
+					this.hide();
+					this.show(i)
+				}
+			}
+		}
+		hide(){
+			for(let i=0;i<this.oDiv.length; i++){
+				this.oDiv[i].style.display='none';
+				this.oBtn[i].className=''
+			}
+		}
+		show(i){
+			this.oDiv[i].style.display='block';
+			this.oBtn[i].className='on'
+		}
+	}
+	
+	new Tab("box");
+	
+	class AutoTab extends Tab{
+		constructor(id){
+			super(id);
+			this.iNow=0;
+			setInterval(this.next.bind(this),1000)	
+		}
+		//setInterval(function(){},1000)
+		next(){
+			//console.log(this)
+			this.iNow++;
+			if(this.iNow===this.oBtn.length){
+				this.iNow=0
+			}
+			this.hide();
+			this.show(this.iNow)
+		}
+	}
+	
+	new AutoTab("box1");
+</script>

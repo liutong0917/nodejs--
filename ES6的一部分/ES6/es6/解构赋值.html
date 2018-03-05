@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>结构赋值</title>
+</head>
+<body>
+
+</body>
+<script>
+
+  /*
+  * 重点  就是去前后的结构必须相同
+  * */
+
+ /* let [a,b,c]=[12,13,14];
+  console.log(a,b,c);*/
+
+ /* let {a,b,c}={a:12,b:13,c:14};
+  console.log(a,b,c)*/
+
+ //在对象 里面解构与顺序无关
+ /* let {a,b,c}={a:12,c:14,b:13};
+  console.log(a,b,c)*/
+
+
+//  对象包数组   不可以
+let [a,[b,c]]=[12,[13,14]];
+ console.log(a,b,c)
+
+
+// let [{a,b},c]=[{a:12,b:13},14];
+// console.log(a,b,c)
+</script>
+</html>

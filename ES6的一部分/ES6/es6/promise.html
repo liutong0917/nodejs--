@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>promise对象的使用</title>
+</head>
+<body>
+
+</body>
+<script>
+  /* es6.ruanyifeng.com */
+  let p1 = new Promise(function (resolve, reject) {
+    //resolve("success");   //成功的时候,抛出的数据
+    reject("fail");          //失败的时候,抛出的数据
+  });
+  p1.then(function (res) {
+    console.log(res)
+  }, function (err) {
+    console.log(err)
+  })
+</script>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>赋值数组</title>
+</head>
+<body>
+
+</body>
+<script>
+  /*
+  * 对数组的复制----地址的赋值和 值的赋值
+  * 使用值的赋值----需要遍历
+  *
+  * */
+  //地址的赋值
+  /*var arr=[1,2,3];
+  var arr1=arr;*/
+  //修改 arr1 会修改 ARR 地址的复制
+
+  //方法1:遍历
+  //方法2:Array.form(arr)
+/*
+
+  var arr=[1,2,3];
+  var arr1=Array.from(arr);
+  console.log(arr1);
+*/
+  //方法2:...arr
+/* var arr=[1,2,3];
+ var arr1=[...arr];
+ console.log(arr1);*/
+
+
+//使用的场景
+  function add(...arr) {
+    console.log(arr);
+    console.log(arguments);
+    //arguments  不是数组的,不可以使用数组的方法的
+
+  }
+  add(1,2,3,4,5,6,7,8);
+
+
+</script>
+</html>

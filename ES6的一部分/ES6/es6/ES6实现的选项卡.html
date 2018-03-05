@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选项卡</title>
+    <style>
+        .tabContent div {
+            width: 500px;
+            height: 200px;
+            border: 1px solid red;
+        }
+
+        .active {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="content">
+    <div class="tabs">
+        <button type="button" :class="">选项卡1</button>
+        <button type="button" :class="">选项卡2</button>
+        <button type="button" :class="">选项卡3</button>
+    </div>
+    <div class="tabContent">
+        <div class="">内容1</div>
+        <div class="">内容2</div>
+        <div class="">内容3</div>
+    </div>
+</div>
+</body>
+<script>
+    class Tabs {
+        constructor(id) {
+            this.box = document.getElementById(id);
+            /*  获取所有的按钮*/
+            this.btns = this.box.querySelectorAll("button");
+            /* 获取所有的内容 */
+            this.contents = this.box.querySelectorAll(".tabContent div");
+            /* 进行初始化 */
+            this.init();
+        }
+
+        init() {
+            //绑定事件
+            for (let i = 0; i < this.contents.length; i++) {
+                this.btns[i].onclick = () => {  //这个this 有讲究
+                    this.hide();
+                    this.show(i);
+                }
+            }
+            //设置刚开始的样式
+            this.hide();
+            this.show(0)
+        }
+
+        hide() {
+            //隐藏所有
+            for (let i = 0; i < this.contents.length; i++) {
+                this.contents[i].style.display = "none";
+                this.btns[i].className="";
+
+            }
+        }
+
+        show(i) {
+            //显示一个
+            this.contents[i].style.display = "block";
+            this.btns[i].className="active";
+
+        }
+    }
+    class AutoTab extends Tabs{
+       constructor(id){
+           super(id);
+           //在这里,是可以写执行语句的,之前不知道(以为只可以写属性--智障了)
+           this.iNow=0;
+           this.autoplay();
+       }
+       autoplay(){
+           let timer=setInterval(()=>{
+               this.hide();
+               this.iNow<this.btns.length-1 ? this.iNow++:this.iNow=0;
+               this.show(this.iNow)
+           },1000)
+       }
+    }
+
+    var a = new AutoTab("content")
+</script>
+</html>

@@ -1,0 +1,373 @@
+NodeJS  的第一天
+    0.ctrl+c  
+        两次退出nodeJS 交互环境
+        DOS里面,文件路径支持拖动
+    nodeJS的安装  64位 
+    1.less文件的转换--使用到了nodeJS
+        less--nodeJS解释JS->css(lessc文件,就是JS文件)
+    2.NodeJS官网
+        nodejs.org  (完美兼容ES6的新特性和新语法,没有兼容性问题--完美)
+        npm 软件管理工具---世界上最大软件管理工具
+        浏览器为什么可以运行JS
+            1.浏览器有JS引擎
+            2.nodeJS C++ 基于V8引擎的JS运行环境(chrome 里面就有V8引擎)
+                把JS引擎单独拿了出来
+            3.chrome和node
+                node不存在window和dom对象
+                nodeJS基于ECMAScript开发的服务器端语言
+                nodeJS 提供了很多的扩展对象---前端JS不具有
+            4.前端JS的构成
+                1.ES的原生对象
+                    String Number Array Object Bool Math Date Error Function,RegExp
+                2.BOM & DOM
+                3.自定义对象
+            5.nodeJS的构成
+                1.ES的原生对象
+                2.Node.js的内置对象
+                3.大量的第三方对象
+                4.自定义对象
+            6.nodeJS 可以编写独立的web服务器应用
+                无需借助其他的服务器
+                服务器端有什么
+                    1.服务器端 Apache
+                        php解释器
+                        服务器在文件系统中找页面--判断用什么解释
+                        nodeJS:
+                            既是服务器,又是解释器
+                    2.文件系统
+                    3.数据库服务器
+                nodeJS 的优势
+                    1.执行效率比PHP/JSP/JAVA快
+                    2.第一次使用一种语言统一了前后端的开发
+                    3.诞生了全站攻城狮(完美)
+                        前端UI
+                        前端
+                        后台
+                nodeJS的特点
+                    1.单线程的逻辑处理
+                        队列--一个一个来
+                        不会很慢:(线程池)
+                            外层是单线程
+                            内部多线程
+                        理解:
+                            1.一次只是接受一个任务(单线)
+                            2.接任务之后,多人处理(线程池,多线)
+                            3.任务处理之后,触发事件---返回接任务的人
+                            4.先一个文件,开始执行
+                    2.非阻塞
+                    3.异步I/O
+                    4.基于是案件驱动编程
+    3.nodeJS的两种运行方式
+        1.交互模式(回车自动执行)---仅仅用于测试
+            读取用户输入,执行运算,输入执行结果,继续下一个循环
+            就是命令行模式(写一句,就做一句)
+            
+            undefind
+                语句的返回值  console.log(age)的返回值
+                age   的返回值就是age的内容
+        2.脚本模式--用于开发
+            执行的所有JS语句,写在独立的文件--一次性提交给nodeJS处理
+            此文件,可以没有后缀
+            执行方法:
+                方法1:
+                    node 路径
+                    可以直接cd  进来  ---找相对路径
+                方法2:
+                    使用webStrom
+                    如此强大的编辑器--厉害了
+                    右键  run+文件名(不可以在浏览器中运行--你用的是服务器端的语言了)
+                    如果不可以,直接重装nodeJS就可以了
+    4.node的下层接口
+        V8,Libuv,Libeio,Libev,IOCP
+    5.nodeJS的基础语法及ES6新特性
+        1.数据类型
+            1.原始类型(直接赋值就可以)
+                String.number,bool
+                原始类型数据直接赋值,就可以
+                自动判断数据的类型
+                var str="hahhaahha";
+                
+            2.引用类型
+                ES的原生对象,nodeJS对象,自定义对象
+                使用new 的关键字来创建
+                nodeJS对象:包括内置对象和第三方对象
+                
+                代码: 
+                    var str=new String('hahaha')
+                    var a=new Buffer(10);
+                        创建10字节的缓冲区
+        2.模板字符串
+            ES6中提供的新的字符串形式
+            file--setting--language---javasscript(选择版本)
+            1.使用模板的方式定义字符串,数据可以实现换行    
+                ``的使用 ,类似于<pre>标签
+                按照原有的样式,输出字符串
+            2.可以使用${}拼接变量,并且可以执行运算
+               代码:(里面可以运算,可以拼接)
+                var info3=`
+                    单价:${price},
+                    数量:${count},
+                    小计:${price*count},
+                    超过预算:${ price*count>20?'超预算':'没超出' }
+                `;
+        3.严格模式
+            概念:
+            ES5中新增的,比普通模式更为严格的JS运行模式
+            使用方法:
+                1.在整个脚本文件中使用严格模式
+                    在脚本文件的开头,写代码
+                    "use stirct"      注意:不加空格
+                     使用场合:
+                        用于新项目
+            
+                2.在单个函数内使用严格模式
+                    function info(){
+                        "use stirct";
+                        //函数的代码
+                    }
+                    使用场合:
+                        用于老项目的维护
+            
+            使用规则:(在严格模式下)
+                1.修改常量的值是非法的
+                    将静默失败升级为错误(nodeJS 版本不一样会有问题)
+                    按照标准来写--
+                    代码:
+                        /*"use strict";*/
+                        const PI=3.14;
+                        /*PI=4;*/
+                        console.log(PI);
+                2.不允许对未声明的变量赋值
+                    代码:
+                        function f1() {
+                            "use strict";
+                            var name='jkj';
+                            loc='山西-大同';  //没有声明,就会报错
+                            console.log(name);
+                            console.log(loc);
+                        }
+                        f1();
+                        console.log(loc);
+                3.匿名函数的this
+                    nodeJS的全局 就是gloable就没有window
+                    启用严格模式 this不在指向全局
+                    会报错
+                    注意: 
+                        再使用前端的时候不要使用严格模式
+                        需要兼容浏览器引擎的版本--很麻烦的
+            
+                4.变量的作用域
+                    全局作用域,函数作用域,块级作用域(ES6专有的)
+                    块级作用域:
+                        只在当前的作用域中使用
+                        代码块:
+                            任何一个'{} '都是一个代码块
+                            if,for,while,switch.........
+                    在代码块中:
+                        使用let来说明块级作用域
+                        出了代码块不可以使用的
+                        代码:(for 循环中()和{}就是一个整体的)
+                            for(let i=0;i<5;i++){
+                                console.log(i);
+                            }
+                            console.log(i);
+        4.循环语句(语句的分支)
+            1.for in 遍历
+                代码:
+                    var obj={
+                        name:'jkj',
+                        age:20
+                    };
+                    for(var k in obj){
+                        /* obj.属性  属性不可以是变量 */
+                        console.log(obj[k],k);
+                    }
+
+                    //for in 可以遍历数组的
+                    var arr=[1,2,3,4,5,63,2,1,1];
+                    for(var k in arr){
+                        console.log(arr[k]);
+                    }
+            2.for of 遍历数组的元素值    
+                注意:
+                    只可以使用数组
+                代码:
+                    for(var val in arr){
+                        console.log(val);
+                    }
+        5.选择结构
+            一样的
+        6.函数
+            1.匿名函数的自调
+            '+',函数表达式的标志,代替了()的作用
+            代码:
+                //新的
+                +function () {
+                    console.log(222);
+                }();
+                //旧的
+                (function (t) {
+                    console.log(t)
+                })(1);
+            2.匿名函数的自调:
+                代码:
+                (function (num) {
+                    if(num>0){
+                        console.log(num);
+                        //这一条语句,就是输出了5句话
+                        arguments.callee(num-1);   //先执行5,4,3,2,1
+                        //他也输出了5句
+                        console.log(num+'hahah');  //后执行1,2,3,4,5hahha
+                    }
+                })(5);
+            3.匿名函数的 for(var k in arr){
+                        console.log(arr[k]);
+                    }
+                语法:好像不可以使用'+',必须是匿名的函数
+                    1.(参数1,参数2)=>{ 函数体 }
+                    3.当参数只有一个的时候  ()可以省略
+                    4.参数1=>{ 函数体 }
+                    5.arguments.callee();  //不可以使用了,匿名函数的调用,箭头函数里面没有arguments的对象
+                代码:
+                    //箭头语法
+                    ((a)=>{
+                        console.log(a)
+                    })(4);
+                使用场合:
+                    var fun=function (){}
+                    var fun=( 参数 )=>{ 这种方式常见 };
+                    代码:
+                        var fun=(n)=>{
+                            console.log(n);
+                        };
+                        fun(6);
+                注意:
+                    1.箭头函数只用于匿名函数
+                    2.在箭头函数的里面不存在arguments对象
+                    非常非常重要!!!!!!!!!!!!--你就正常些,就可以了
+                箭头函数的一些案例和代码:
+                    1.依次输出1,2,3,4,5
+                        for(var i=0;i<5;i++){
+                            // 保存一下i
+                            setTimeout(((num)=> {
+                                return ()=> {
+                                    console.log(num);
+                                }
+                            })(i),1000);
+                        }
+                        使用的原理:
+                            1.造成的原因
+                                setTimeout()的方法是,异步的
+                                你延时1s,for循环直接就执行完了---来不及了
+                            2.解决的方法
+                                使用闭包保存一下那个i 你在慢慢执行就好
+                                什么是闭包呢:
+                                    简单理解:
+                                        闭包,外层的函数直接return 内层的函数
+                                        使用了return 
+                
+                    2.函数自调的解析
+                        代码:(理解一下子)
+                            (function (num) {
+                                if(num>0){
+                                    console.log(num);
+                                    //这一条语句,就是输出了5句话
+                                    arguments.callee(num-1);   //先执行5,4,3,2,1
+                                    //他也输出了5句
+                                    console.log(num+'hahah');  //后执行1,2,3,4,5hahha
+                                }
+                            })(5);
+        7.对象:                            
+            1.对象的创建
+                1.对象直接量的方式
+                    代码:
+                        var p={ key:"value" }
+                2.构造函数的方式
+                    代码:
+                        function Person(){
+                            this.name='jkj'
+                        }
+                        var p=new Person();
+                3.原型继承的方式
+                    代码:
+                        var parent=new Object;
+                        var p=Object.create(parent);
+                4.新增的方式  class方式--ES新增
+                    class:就是类
+                    概念:
+                        是一组相似对象属性和行为的抽象集合
+                    代码格式:
+                        "use strict";
+                        //创建自定义对象
+                        class Person {
+                            //构造函数只用来表示属性
+                            constructor(pname,salary){  //声明一个构造函数
+                                this.pname=pname;
+                                this.salary=salary;
+                            }
+                            //方法
+                            work(){
+                                return  `${this.pname} is working`;
+                            }
+                            sal(){
+                                return `员工${this.pname}的工资为${this.salary}`
+                            }
+                        }
+                        var p1=new Person('jkj',8000);
+                        console.log(p1.pname);
+                        console.log(p1.sal());
+                        console.log(p1.work());
+                        var p2=new Person('kk',10000);
+                    注意:
+                        必须使用严格模式
+            2.如何实现继承呢??
+                代码:
+                    "use strict";
+                    //创建自定义对象
+                    class Person {
+                        //构造函数只用来表示属性
+                        constructor(pname,salary){  //声明一个构造函数
+                            this.pname=pname;
+                            this.salary=salary;
+                        }
+                        //方法
+                        work(){
+                            return  `${this.pname} is working`;
+                        }
+                        sal(){
+                            return `员工${this.pname}的工资为${this.salary}`
+                        }
+                    }
+                    //实现继承  extends 继承自Person
+                    class Programmer extends Person{
+                        constructor (pname,salary,kills){
+                           super(pname,salary);  //直接继承
+                            this.kills=kills;
+                        }
+                        work(){
+                            return `我是覆盖了的方法`
+                        }
+                        sal(){
+                            return super.sal()+'kills我拼接了大哥'
+                        }
+                    }
+                    var p3=new Programmer('jj','8888','php');
+                    console.log(p3.sal());
+                    console.log(p3.work());
+                        
+            3.ES6 需要自学的
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

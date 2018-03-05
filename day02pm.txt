@@ -1,0 +1,326 @@
+day02 pm  ctrl+shift+f12   alt+f12
+1.path模块(url是网络路径,path是文件路径或者叫本机路径)
+    提供文件路径的操作的相关的方法
+    方法:
+        1.parse()
+            解析一个路径,参数为路径字符串
+            参数:路径字符串
+            代码:
+                var path=require("path");
+                var str="G:/XAMPP/htdocs/nodeJS/1.js";
+                console.log(path.parse(str));
+        2.format()
+            将路径对象格式化为路径字符串,参数为对象
+            代码:
+                var obj = {
+                    dir: "G:/XAMPP/htdocs/nodeJS",
+                    base: "1.js"
+                };
+                console.log(path.format(obj));
+            注意: /和\ 一样的
+        2.join
+            用于连接路径,会正确的使用当前的系统的分割符号
+            代码:
+                console.log(path.join("G:","day02","1.js"))
+        3.resolve()
+            根据基础路径--->目标路径的绝对路径
+            代码:
+                var path1="e:htdocs/01/login";  //基础路径 目录
+                console.log(path.resolve(path1,'../img/2.jpg'));
+            输出:
+                e:\htdocs\01\img\2.jpg
+        4.relative()  --相对
+            根据基础路径--->获取目标路径与其的相对关系
+            代码:
+                console.log(path.format(obj));
+                var path1="e:htdocs/01/login";  //基础路径 目录
+                console.log(path.relative(path1,'e:htdocs/img/2.jpg'));  //相对于login目录
+            输出:
+                ..\..\img\2.jpg
+            
+2.DNS模块:
+    域名和IP的双向解析功能
+    方法:
+        1.lookup() //域名--->IP地址
+            操作系统的缓存中查询--缓存中只可以保存一个ip地址
+            代码:
+                var dns=require("dns");
+                dns.lookup('www.baidu.com',function (err,address,family) {
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log(address);
+                        console.log(family);  //ipv4 ipv6  4&6
+                    }
+                });
+            输出:
+                111.13.100.92
+                4
+        2.resolve() //域名--->IP地址
+            把域名解析为DNS记录解析数组
+            DNS服务器中查询
+            代码:
+                dns.resolve('www.baidu.com',function (err,address) {
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log(address);
+                        console.log(family);
+                    }
+                });
+            数组:
+                [ '111.13.100.92', '111.13.100.91' ]
+                undefined
+        3.reverse()   反向解析(大部分网站是禁止反向解析的)
+            ip--->域名  (在国内不好使)
+            代码:  
+                dns.reverse('60.221.254.230',function (err,hostnames) {
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log(hostnames);
+                    }
+                })
+            
+3.Util工具模块:
+    方法:
+        1.fotmat()
+            使用带占位符的方式,格式化字符串
+            代码:
+                var util = require("util");
+                var obj = {
+                    name: "jkj",
+                    sex: 1,
+                    isMan:true
+
+                };
+                var s1=util.format("名字:%s,价格:%d,isMan:%s,对象:%j",obj.name,obj.sex,obj.isMan,obj);
+                console.log(s1);
+            输出:
+                名字:jkj,价格:1,isMan:true,对象:{"name":"jkj","sex":1,"isMan":true}
+        2.inspect()  
+            返回对象的字符串表示
+            代码:
+                console.log(util.inspect(obj));
+            输出:
+                { name: 'jkj', sex: 1, isMan: true }
+        3.inherits()
+            构造方法之间的继承(两个构造方法+继承)
+            代码:
+                function Base() {
+                    this.name="base"
+                }
+                Base.prototype.age='20';
+
+                function Sub() {
+                    this.name="sub"
+                }
+                var util=require("util");
+                util.inherits(Sub,Base);
+                var user=new Sub();
+                console.log(user.age)
+            
+4.Buffer  缓冲区 (global的成员,可以不引入require())
+    由于存数据的内存区域,与string类型相对应,用于存储二进制数据
+    Buffer 是一个构造函数
+    实例化,读取文件获得或者手动创建--多种方法:
+        1.代码1
+            //创建一个32位的缓冲区
+            var buf1 = new Buffer(32);
+            console.log(buf1);  //16
+        2.代码2 
+            //三字节的缓冲区--同时存入内容
+            var buf2 = new Buffer([65, 66, 67]);  //  存入10进制
+            console.log(buf2.toString());   //buffer转为字符串
+        3.代码3
+            //创建长度为4字节缓存,直接存入字符串
+            var buf3=new Buffer("ABCD");
+            console.log(buf3);
+            console.log(buf3.length);
+            console.log(buf3.toString());
+        4.代码4:
+            var buf4=new Buffer("AB一二三","utf8");
+            console.log(buf4);
+            console.log(buf4.length);  //一个汉字占3个字节
+            console.log(buf4.toString());
+5.fs 模块(文件系统模块)
+    fs----文件的 读写,更名,遍历目录...
+        方法:
+            同步方法 
+                sync:同步的意思
+                队列,等待的方法
+                没有callback()
+            异步方法
+               都有一个回调函数 callback()----回调函数的第一个参数都是一个错误对象err
+               事件驱动---事件结束,触发时间
+               不报错,不终止运行---指示当前方法没有返回值
+               静默失败,不会抛出错误---需要手动处理
+        常用的class:
+            fs.Ststs   //文件 或目录的
+            fs.readStream  //stream.Readable的实现对象
+            fs.WriteStream   //streamWriteable接口的实现对象
+            fs.FSWatcher  //监视文件修改的监视器对象
+        常用的方法:(加sync--就是同步的)
+            fs.stat()  //用于返回一个文件或目录的统计信息对象(fs.Stats对象)
+            fs.mkdir()  //创建目录
+            fs.dir()  //读取目录下面的内容
+            fs.readFile()  //读取文件内容
+            fs.writeFile()  //向文件中写入内容
+            fs.appendFile()  //向文件的末尾追加内容
+            fs.unlink()  //删除文件
+            fs.rename  //重命名
+        1.fs.stat()  &  fs.statSync()  
+            返回值:
+                fs.stats对象
+            fs.stats对象的方法:
+                stats.isFile()  //是否为文件
+                stats.isDirectory()  //是否为目录
+            代码:(读取文件)
+                var fs=require("fs");
+                var path1="./log";
+                var path2="./log/out.log";
+                var stats1=fs.statSync(path1);
+                /*console.log(stats1);*/
+
+                var stats2=fs.statSync(path1);
+                /*console.log(stats2);*/
+
+                //异步的读取文件 或者目录
+                fs.stat(path1,function (err,stats) {  //读取文件,时间比较长
+                    if(err){
+                        console.log("文件或者目录读取失败");
+                    }else{
+                        console.log("文件读取成功");
+                    }
+                });
+                //同步的方式,会阻塞JS的执行
+                console.log(stats1.isFile());
+                console.log(stats1.isDirectory());
+        2.对于目录的操作
+            1.代码1:
+                var fs=require("fs");
+                var path="./jkj";
+                fs.stat(path,function (err,ststs) {
+                   if(err){
+                       fs.mkdir(path,function () {
+                            //创建目录
+                       });
+                   } else{
+                       fs.rmdir(path,function () {
+                            //删除目录
+                       })
+                   }
+                });
+            2.代码2:
+                //判读目录是否存在,存在,读取目录下面的内容
+                fs.stat('./log',(err,stats)=>{
+                    if(err){
+                        console.log("当前的目录不存在")
+                    }else{
+                            fs.readdir("./log",function (err,list) {
+                                console.log(list);
+                            })
+                    }
+                });
+        3.关于文件的操作:
+            fs.readFile()和fs.readFileSync()
+                代码:
+                    var fs=require("fs");
+                    //操作文件
+                    fs.readFile("./log/out.log",(err,data)=>{
+                        if(err){
+                            console.log("读取文件失败");
+                        }else{
+                            console.log(data);
+                            console.log(data.toString());
+                        }
+                    });
+            fs.writeFile()
+                写入内容的时候
+                    文件不存在--自动创建指定文件
+                    存在--就修改内容(是替换而不是追加内容)
+                代码:
+                    //文件中写入内容---这里报错了(为什么)
+                    var file1="./log/err.log";
+                    let data1="this is a test....";
+                    fs.writeFile(file1,data1,(err)=>{
+                        if(err){
+                            console.log("写入失败");
+                        }else{
+                            console.log("文件写入成功")
+                        }
+                    });
+            fs.appendFile()
+                写法和 fs.writeFile()基本一致的
+                语法:
+                    fs.appendFile(路径, 内容, callBack())
+                效果; 
+                    文件不存在--自动创建指定文件
+                    存在--就追加内容
+                注意:
+                    可以创建文件但是不可以创建目录的
+                    多次执行代码,为什么不可以多次追加语句
+                代码:
+                    var file2 = "./log/err.log";
+                    var data2 = "this is a test....";
+                    fs.appendFile(file2, data2, (err) => {
+                        if (err) {
+                            console.log("写入失败");
+                        } else {
+                            console.log("追加成功")
+                        }
+                    });
+            fs.unlink()
+                代码:
+                    //删除文件的方法
+                    fs.unlink("./log/test",(err)=>{
+                       if(err){
+                           console.log("删除文件失败")
+                       } else{
+                           console.log("删除文件成功了");
+                       }
+                    });
+            fs.rename()
+                代码:
+                    //重命名文件  --注意:这两个都是路径,写不对就会删除文件的
+                    fs.rename('./log/index.html','./log/renamed.html',(err)=>{
+                        if(err){
+                            console.log("重命名失败");
+                        }else{
+                            console.log("重命名成功")
+                        }
+                    });
+                
+                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            

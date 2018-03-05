@@ -1,0 +1,289 @@
+day03 am
+注意:
+    对服务器的修改之后,必须重启服务器
+模块的分类
+    1.核心模块
+    2.第三方模块
+    3.自定义模块
+        文件模块
+            没有后缀的文件   默认js文件
+            .js的文件模块
+            .json模块  ---转换为对象使用
+            .node模块  
+        目录模块
+            package.json文件 main指向主文件
+            index.json
+            index.json
+            index.node
+            
+包和npm
+    包规范:
+        包是一个目录
+            package.json 
+            index.js 
+            lib----js文件
+            bin----二进制文件
+            doc----文档文件
+            test-----测试文件(演示案例)
+    npm的包管理工具
+        常用命令:
+            下载安装
+                npm install 包名 [-g]
+            更新:
+                npm uodate 包名
+            删除和卸载:
+                npm uninstall 包名
+            生成package.json  
+                npm init
+            发布:
+                npm adduser 登录或者注册
+                npm publish 发布
+                
+        nodeJS的核心模块:
+            1.console模块
+                Console类
+                代码:
+                    var loger=new c.Console(our,err);
+                    loger.log()
+                    loger.error()
+            2.querystring模块
+                parse() ---字符串->对象
+                stringify()----对象-->字符串(注意参数的关系)
+            3.url url操作方法
+                parse()   url字符串-->对象
+                format()   对象-->url
+                resolve()   自己测试(不太好理解)
+            4.path
+                parse()  路径解析为对象
+                format()  对象-字符串
+                join()   字符串拼接
+                reletive()   解析为相对地址
+            5.dns
+                lookup()   //域名--->IP(缓存)
+                resolve()  //域名--->IP数组
+                reverse()  //IP--->域名
+            6.util工具模块
+                format()  占位符的方式 格式化为 字符串
+                inspect()  对象-->字符串
+                inherits()  构造函数的继承
+            7.buffer 缓冲区模块
+                buffer对象.toString()方法
+                new Buffer(10)  //实例化,10个字节的缓冲区
+                new Buffer([6,67,68])  //ASIC编码的数组
+                new Buffer("abcd哈",'utf8');
+                    出现中文就得设置编码
+            8.exports
+                export  module.exports
+                文件的相互引用
+                导出方法或者文件
+            
+http:模块的学习:
+    HTTP:用于构建使用http协议的客户端应用和服务器端应用
+    HTTPS:和http是不同的
+        功能:
+            创建并发起请求的消息,等待解析响应消息--实现web客户端
+            接收并解析请求消息,构建并发送消息---实现web服务器
+        常用对象:4个
+            http.ClientRequest
+            http.Server
+            http.ServerResponse
+            http.IncomingMessage
+        常用的方法:
+            http.createServer()  //创建服务器时使用
+            http.get()  //发送请求
+            http.requeat() //发送请求
+    1.模拟客户端具体的实现:
+        0.sever服务器存在的目录
+            就是站点的根目录
+        1.http.request   //发起请求的
+            基于HTTP客户端的工具
+            用于向web 服务器发起http请求,获取响应的数据
+            方法:2个主要的方法
+                0.方法的返回对象,就是http.ClientRequest对象
+                    作用:
+                        用于描述请求信息的
+                    参数:
+                        回调函数的参数就是http.IncomingMessage对象,
+                        封装了响应数据  
+                1.http.get()  //发送请求
+                2.http.requeat() //发送请求
+                
+        2.ClientRequest对象的常用方法
+            1.write(chunk)
+                向服务器追加请求主体数据
+            2.end():
+                提交请求消息主体结束
+            3.setTimeout()
+                设置请求消息的超时时间
+            4.abort():
+                终止请求
+        3.ClientRequest对象的常用事件
+            1.response:接收到响应消息触发的事件
+            2.abort  //请求终止事件
+            3.error:  //请求错误触发的事件
+        代码案例:
+            1.代码1
+                //模拟客户端向服务器端发送请求--get方法
+                //使用get的方法发送请求
+                var http=require("http");
+                var options={
+                  hostname:"www.tmooc.cn",
+                  port:"80",
+                  path:"/web/index_new.html"
+                };
+                //发送请求
+                var req=http.get(options,function (res) {
+                    console.log("接收到响应消息.........");
+                    //响应状态码
+                    console.log(`响应状态码${ res.statusCode }`);
+                    console.log(`响应头${ res.headers }`);
+                    console.log(`响应头${JSON.stringify(res.headers )}`);
+                    res.on("data",(chunk)=>{
+                        //响应主体内容
+                        console.log(chunk);
+                        console.log(chunk.toString());
+                    })
+
+                });
+                //请求事件超时处理
+                req.setTimeout(2000,()=>{
+                    req.abort();
+                    console.log("超时处理,已经终止请求");
+                });
+
+                //监听错误事件
+                req.on("error",(err)=>{
+                    console.log(`请求发生错误${err}`);
+                });
+            2.代码2:
+                //使用request的方法发送请求
+                var http=require("http");
+                var options={
+                    hostname:"www.tmooc.cn",
+                    port:"80",
+                    path:"/web/index_new.html",
+                    //method默认为 get,大多数的静态页面都是get方式的
+                    method:"post"
+                };
+                //发送请求
+                var req=http.request(options,function (res) {
+                    console.log("接收到响应消息.........");
+                    //响应状态码
+                    console.log(`响应状态码${ res.statusCode }`);
+                    console.log(`响应头${ res.headers }`);
+                    console.log(`响应头${JSON.stringify(res.headers )}`);
+                    res.on("data",(chunk)=>{
+                        //响应主体内容
+                        console.log(chunk);
+                        console.log(chunk.toString());
+                    })
+
+                });
+                //请求事件超时处理
+                req.setTimeout(2000,()=>{
+                    req.abort();
+                    console.log("超时处理,已经终止请求");
+                });
+
+                //监听错误事件
+                req.on("error",(err)=>{
+                    console.log(`请求发生错误${err}`);
+                });
+                //request  需要显式调用  表示主体的组织结束
+                req.end();
+
+            3.总结
+                使用get()不需要手动调用end()方法
+                使用request()需要手动调用end()  --才可以正常使用
+                
+    2.服务端的实现 http.server
+        基于事件的http服务器
+        用于创建web服务器,接收客户端请求,返回响应消息
+        所有的请求,都被封装到独立的事件当中,只需要对事件编写相应的
+        处理程序,就可以实现http服务器的所有功能.
+            
+        常用的方法:
+            http.createServer()方法
+                用于创建web服务器应用,可以接受客户端请求,并返回
+            返回值是一个对象
+                http.Sever对象
+                http.Sever对象的常用方法:
+                    listen():启动服务器,监听制指定的端口号
+                    close():停止服务器的运行
+                    setTimeout():设置响应服务器的响应消息超时时间
+                http.Sever对象的常用事件;
+                    connection:出现客户端链接的时候触发
+                    request:接受到请求消息
+                    close:服务器停止事件
+                    error:响应发生错误的时候触发
+            http.Server对象的request事件回调函数中有两个参数       
+                参数1:
+                    http.IncommingMessage
+                    封装客户端提交的请求消息数据
+                参数2:
+                    http.SeverResponse对象
+                    用于构建向客户端输出的响应消息数据
+            代码案例:
+                //创建一个简单的web服务器
+                var http=require("http");
+                //1.使用http模块创建服务器
+                //方法1:
+                /*var sever=http.createServer(function (req,res) {
+
+                });*/
+                var sever=http.createServer();
+                //方法2  2.为服务器的request绑定事件处理函数
+                sever.on("request",function (req,res) {
+                    console.log("web服务接收到一个请求");
+                    console.log(`请求方法:${ req.method }`);
+                    console.log(`请求URL:${ req.url}`);
+                    console.log(`请求版本:${ req.httpVersion}`);
+                    console.log(`请求头1:${ req.headers}`);
+                    console.log( req.headers);
+                    console.log(`请求头2:${JSON.stringify(req.headers)} `);
+                });
+
+                //3.启动web服务器--监听指定端口
+                sever.listen(8000,'127.0.0.1',(err)=>{
+                        if(err){
+                            console.log(`web服务器启动失败,错误消息为 ${err}`)
+                        }else{
+                            console.log("服务器启动成功,监听8000端口");
+                        }
+                });
+                                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+            
+        

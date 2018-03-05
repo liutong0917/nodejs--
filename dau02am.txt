@@ -1,0 +1,406 @@
+day02 am
+0.0回顾:
+    nodeJS概述:
+        1.C++编写的JS解释器
+        2.基于ES的服务器段语言
+        3.编写独立的服务器端的应用
+    特点:
+        单线程逻辑处理
+        非阻塞
+        异步IO处理
+        事件驱动编程
+    node的基础语法和ES6新特性:
+        1.数据类型:
+            1.模板字符串`` --换行和运算${}
+            2.严格模式
+                脚本文件  
+                函数的开头
+                语法:
+                    const 不允许再次赋值(修改常量的值是非法的)
+                    未声明的变量赋值,不可以
+                    匿名函数的this不在指向全局
+            3.块级作用域:
+                只在当前的代码块中起作用---{}就是一对代码块
+                声明块级作用域变量使用let --需要启用严格模式
+            4.for ..of..
+                遍历数组的元素值(只是数组)
+            5.箭头函数:=>
+                用于匿名函数
+                arguments对象失效了-好像新的版本有了???
+                用于回调函数的
+            6.创建对象
+                对象直接量
+                构造函数
+                原型继承
+                class 使用class来创建新的对象
+                创建:
+                    class 类名{
+                        constructor(参数1,参数2){
+                            
+                        }
+                        方法名(){
+                            
+                        }
+                    }
+                继承:
+                    super和extend  关键字
+        
+    nodeJS的全局对象:global
+        交互模式,声明的都是global
+        但是脚本模式的全局,是当前的文件的变量
+    
+        console:方法  console.time()+console.timeEnd()
+        
+        process:进程的意思 process.kill(pid)
+    定时器:
+        global.setImmediate()  下一个之前
+        process.setTick()      当前进程结束之后马上执行
+        
+1.0模块系统:
+    核心模块
+    第三方的模块--需要在网上下载(都需要使用)
+    自定义模块--一个加载JS文件,就是一个自定义模块
+    
+    主模块--第一个执行的模块就是主模块
+        process.mainModule
+        require.main
+    模块的引入:
+        var fs=require("fs"); //fs就是一个模块对象
+        
+    判断当前模块是不是主模块:
+        require.main===module
+        module:指向当前的模块自己
+        
+    模块的创建和导出:
+        1.模块的创建+导出可以提供给他模块使用的方法
+            代码:
+                //圆的面积和周长
+                const PI=3.1415926;
+                var size=function (r) {
+                    return PI*r*r;
+                };
+                var perimeter=function (r) {
+                    return 2*PI*r;
+                };
+                //导出的方法
+                exports.exSize=size;
+        2.模块的引入和模块的方法的调用    
+            代码:
+                var c=require("./export.js");  //不可以写绝对路径的
+                console.log(c.exSize(10));
+                console.log(c.PI);  //你就么有导出啊
+    模块的预定义的属性:
+    -----预定义的模块作用域成员
+        module    :指向当前模块自己
+        __dirname :当前模块文件所在的目录     
+        __filename:当前文件所在的目录和文件名
+        module.exports:  指向当前模块中待导出的供其他模块使用的对象
+        exports:指向module.exports的对象的引用--就是一种简写模式
+        require: 引入其他的模块,使用其他模块的module.exports对象
+        
+        注释:module和module.exports的区别
+            1.模块文件在编译的时候会进行包装(包装框架如下)
+                (function( exports,require,module,__filename,__dirname){
+                    module.exports={};
+                    exports=module.exports;
+                    
+                    //你写的代码内容
+                    
+                    return module.exports;
+                })
+            2.所以module和module.exports会出现不同:
+                导出方法1:  (二者没有区别)
+                    被调用模块:
+                        代码:
+                        (function (exports, require, module, __filename, __dirname) {
+                            module.exports = {};
+                            exports = module.exports;
+
+                            //圆的面积和周长
+                            const PI = 3.1415926;
+                            var size = function (r) {
+                                return PI * r * r;
+                            };
+                            var perimeter = function (r) {
+                                return 2 * PI * r;
+                            };
+                            //导出的方法1.给对象动态添加属性(二者是没有区别的)
+                            exports.exSize = size;
+                            return module.exports;
+                        });
+                    调用模块:
+                        代码:
+                            var c=require("./exportf1");  //不可以写绝对路径的
+                            console.log(c.exSize(10));
+                            console.log(__dirname)
+                导出的方法2:
+                    被调用模块:
+                        /*
+                        (function (exports, require, module, __filename, __dirname) {
+                            module.exports = {};
+                            exports = module.exports;
+                        */
+
+                            //圆的面积和周长
+                            const PI = 3.1415926;
+                            function Circle(r) {
+                                this.size = function () {
+                                    return PI * r * r;
+                                };
+                                this.perimeter = function () {
+                                    return 2 * PI * r;
+                                }
+                            }
+
+                            //导出的方法2.叫做对象的替换---exports->Circle   module.exports-->{} 指向那个空的新对象
+                            /*exports=Circle;*/
+                            module.exports=Circle;
+                        /*
+                            return module.exports;
+                        });*/
+                    调用的模块:
+                        var c=require("./exportf2");
+                        var circle=new c(5);
+                        console.log(circle.size());
+                                
+            3.自定义模块
+                1.文件模块(独立的文件)
+                    没有后缀的文件模块,默认最为.JS文件加载
+                    .js后缀文件模块,js文件的加载
+                    .json的文件.json字符串加载---会自动解析为对象
+                    .node后缀,作为c/c++,2进制加载--工具转换出来的
+                2.目录模块(就是文件夹)
+                    引入的时候只需要引入目录名就可以了
+                    引入目录的方式:
+                        1.包含一个package.json的目录模块
+                            "main":指向模块的主文件
+                        2.不写package.json的文件
+                            包含以下文件其中的一种:
+                            index.js
+                            index.json
+                            index.node
+                3.模块该放在哪里:
+                    0.node 自带的模块是不需要指定路径的 直接写文件名就可以了(不用你考虑位置)
+                    1.nodeJS建议自定义的模块放在node_module目录下面
+                    这样,require的时候,直接写名称即可,不需要指定路径
+                    2.node_module
+                        只要放在项目的目录下面,都可以被找到
+                        但是:查找顺序为  文件当前目录下的文件--->上一层目录的文件-->直到找到了项目的根目录
+                4.nodeJS的模块查找顺序
+                    1.先找已经使用过的文件/目录缓存
+                    2.找原生模块的缓存
+                    3.如果是第一次使用
+                        就先找原生模块
+                        再找文件/目录模块
+                    得出的结论:
+                        如果你的模块名称和nodeJS的名称重复了
+                        不会出现覆盖--直接找不见你的模块(所以,不要重名)
+2.0 包和npm
+    CommonJS 包规范
+        包(package)的概念:
+            根据CommonJS的规范,对模块进行标准的封装
+        包的结构要求(包规范):
+            1.包是一个目录
+            2.目录中必须包含一个package.json包说明文件,存放于当前包顶级的目录下
+                里面如何写--自己百度
+                按照需求,写几个就可以
+                没有main 字段  --自动查找index.js或index.json
+                简单的代码模块:
+                {
+                    "name":"包名",
+                    "main":"index.js",  //有index可以不下 main
+                    "description":" 描述 ",
+                    "version":"版本号",
+                    "keywords":["关键词1","关键词2"],
+                    "maintainers":[ {"name":"jkj1"},{"name":"jkj2"}]
+                }
+                
+            3.目录中,如果有index.可以放在包的顶级目录下
+            4.其他的JS文件,放在lib文件夹下面
+            5.二进制文件放在bin目录下
+            6.文档放在doc目录下面
+            7.单元测试文件,放在test的目录下面
+                里面存放 示例代码
+        commenJS的规范要求:
+            包应该放在当前目录或者父目录下的node_module文件夹下面
+            require函数由近及远依次查找.
+3.0 npm的包管理器
+    概念:
+        node package Manager 第三方的包
+    www.npmjs.com  
+    安装:
+        nodeJS的文件里面集成了npm
+    注意:
+        lessc的npm
+            只是一个文件
+        node的npm
+            是一个可执行文件
+        两个是不一样的
+    如何使用官网:
+        node没有继承mysql的包
+        通过命令行的方式来下载操作第三方的包
+            1.安装在当前的目录下(你可以手动的调整路径)_
+                npm install 包名
+                npm install mysql
+                会安装到指目录的node_modules的文件夹下面
+                报警告的时候
+                    依赖的包不存在--会自动下载
+                    下载了一些不需要的包
+                使用后的时候需要引入
+                查看目标路径:
+                    npm root 
+            2.安装到全局:
+                npm install 包名 -g
+                安装到npm的目录下面
+                交互模式下,不用引入\就可以使用
+                安装的目录:
+                    D:\Users\jasin\AppData\Roaming\npm\node_modules
+               
+                之后:(也可以不粘贴--没关系的)
+                    复制粘贴到你的工程目录下面就可以了
+                查看目标路径:
+                    npm root -g
+            3.列出已经安装的包  []选择性的添加
+                npm ls 包名  [-g]
+            4.更新已经安装的包
+                npm update 包名 [-g]
+            5.卸载安装的包
+                npm uninstall 包名  [-g]
+        生成包:
+            使用npm init 在当前的目录下,生成一个package.json的文件
+            1.cd 到当前的目录下面     G:   cd html(文件目录)
+            2.npm init 
+                可以修改自动生成的默认值(默认值就好了)
+                没有默认,也没有输入,就不会在json的文件里面生成
+        发布包:
+            1.注册个人账户:
+                官网注册
+                使用npm adduser 注册或者登陆账号
+            2.进入配置完成的包目录,使用 npm publish 来发布包
+                1.进入包的目录下面
+                2. npm publish
+            3.到npmjs.com上搜索已发布的包
+4.0 Node.JS的核心模块
+    1.console模块
+        1.global.console(是global的子模块)
+            用于向stderr和stdout输出日志信息
+        2.console class  Console构造函数
+            Console构造函数用于向任意指定的输出流(文件)中输入信息的.
+        3.代码写法:
+            var fs=require("fs");  //引入fs模块
+            //创建写入流  ---创建文件
+            var out=fs.createWriteStream("./log/out.log");
+            var err=fs.createWriteStream("./log/err.log");
+
+            //调用构造函数
+            var c=require("console");
+            var loger=new c.Console(out,err);
+
+            //实例的方法,写入文件内容
+            loger.log("log....");
+            loger.error("err....");
+        
+    2.querystring模块
+        概念:
+            querystring 模块提供了一些实用函数，用于解析与格式化 URL 查询字符串
+            http://www.baidu.co./index.html?a=1&b=2#section
+               " a=1&b=2" 就是查询的字符串
+        
+        方法:
+            1.parse()方法:
+                从查询字符串中解析出数据对象
+                参数为一个查询字符串 str
+                代码:
+                    var url=require("url");
+                    var str="http://tom:123@tedu.cn:8080/news/index.html?pid=20#section";
+                    console.log(url.parse(str,true));
+            2.stringify()
+                数据对象,反向解析为一个查询字符串格式
+                    参数1,为一个数据对象
+                    参数2,可选,指定键值对的分隔符(默认分割符号"&")
+                    参数3,可选,指定键和值的分隔符 (默认"=")
+                    代码:
+                        var qs=require("querystring");
+                        var str="name=tom&age=20";
+                        console.log(qs.parse(str));
+
+                        var obj={
+                            name:"jkj",
+                            age:"30"
+                        };
+                        console.log(qs.stringify(obj,"-","键和值"));
+            3.URL模块
+                提供处理url不同部分的相关在操作
+                1.parse()
+                    解析url的各个组成部分
+                    参数1:要解析的url字符串
+                    参数2:可选,将query(查询字符串部分) 解析为对象的格式
+                    代码:
+                        var url=require("url");
+                        var str="http://tom:123@tedu.cn:8080/news/index.html?pid=20#section";
+                        console.log(url.parse(str));
+                        console.log(url.parse(str,true));
+                2.format()
+                    将对象反向格式化为url格式
+                    参数为一个对象
+                    代码:
+                        var url=require("url");
+                        var obj={
+                            protocol:"http:",
+                            host:"tedu.cn",
+                            pathname:"course_list/index.html",
+                            query:{cid:30},
+                            hash:"section"
+                        };
+                        console.log(url.format(obj));
+                3.resolve()方法
+                    为url插入或者替换原有的地址
+                    参数1:基地址
+                    参数2:相对地址
+                    代码:
+                        var url1="project/static/base.html";  //基地址
+                        var url2="../img/1.jpg";  //相对地址
+                        console.log(url.resolve(url1,url2));
+                    理解:
+                        根据基地址和相对地址.解析出目标地址
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>定时器传参数</title>
+</head>
+<body>
+
+</body>
+<script>
+    /*
+    * 在JavaScript中，call、apply和bind是Function对象自带的三个方法，
+    * 这三个方法的主要作用是改变函数中的this指向
+    *
+    * 参考:
+    *   https://www.cnblogs.com/libin-1/p/6069031.html
+    *   bind()
+    *       第一个参数,默认给了this--不会出现在arguments里面
+    *       第二个,是正常的传参数
+    * 关于MDN的解释:
+    *   bind()方法会创建一个新函数，称为绑定函数，
+    *   当调用这个绑定函数时，绑定函数会以创建它时传入 bind()方法的第一个参数作为 this，
+    *   传入 bind() 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数。
+
+        注意：bind方法的返回值是函数
+    *
+    * */
+    //测试
+    let timer=setInterval(add.bind(this,"asd"),1000);
+    function add(a) {
+        console.log(this,a);
+    }
+
+</script>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>generator</title>
+</head>
+<body>
+
+</body>
+<script>
+    /*
+    * yield英 [jiːld]美 [jild]
+        n. 产量；收益
+        vt. 屈服；出产，产生；放弃
+        vi. 屈服，投降
+    * */
+  function *show() {
+    yield "hello";
+    yield "world";
+    yield "ni hao";
+    return "返回值"
+  }
+  let res=show();
+  console.log(res.next());
+  console.log(res.next());
+  console.log(res.next());
+  console.log(res.next());
+</script>
+</html>

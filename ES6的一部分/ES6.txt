@@ -1,0 +1,227 @@
+ES6 的一些语法和学习:
+    1.使用常量:
+      * 常量  初始化的时候必须赋值(且.只可以在初始化的时候赋值)
+      * 常量  不可以再次赋值
+      * 常量  常量名 需要大写..
+      代码:
+            const NAME="jkj";
+            console.log(NAME);
+    2.选项卡的案例:
+        ES6的构造器(构建一个类)
+            class Person {
+                constructor(name = "defaultName", sex = "defaultSex") { //设置参数的-------默认值
+                  this.name = name;
+                  this.sex = sex;
+                  console.log(this.name)
+                }
+
+                sayHello() {
+                  console.log("hello " + this.name);
+                }
+            }
+            var a=new Person();
+        ES6的继承:
+            class Tab{
+                //需要继承的 父级构造器
+                constructor(  ){
+                   
+                }
+            }
+            class AutoTab extends Tab{
+                constructor(id){
+                    super(id);  //从当前的方法获取的参数---传给了继承来的Tab
+                    在这里,可以进行代码的执行,随便写代码
+                }
+                next(){
+                   在这里,写方法....
+                   super.方法  //调用 继承来的函数
+                   this.属性    //调用,继承来的属性
+                }
+            }
+            
+            var a=new AutoTab(id)   // a.父元素的方法
+    3.for of 的方法
+        代码:
+            for(let i of arr){
+                console.log(i);
+            }
+            //for of的方法不可以循环jason的对象--只可以循环map的对象
+        
+    4.什么是map对象
+        代码1:
+              var m = new Map();
+              m.set(1, "black");
+              m.set(2, "red");
+              m.set("colors", 2);
+              m.set({x:1}, 3);
+
+              console.log(m);
+              m.forEach(function (item, key, mapObj) {
+                document.write(item.toString() + "<br />");
+              });
+        代码2:
+            //for of 就是为他准备的
+            for (let index of map) {
+                console.log(index);
+            }
+            //解构的方法
+            for (let [key, val] of map) {
+                console.log(key, val);
+            }
+            for (let [...arr] of map) {
+                console.log(arr);
+            }
+
+            for (let item of map.entries()) {
+                console.log(item);
+            }
+            for (let key of map.keys()) {
+                console.log(key);
+            }
+            for (let val of map.values()) {
+                console.log(val)
+            }
+    5.generator
+        代码:
+          function *show() {
+            yield "hello";
+            yield "world";
+            yield "ni hao";
+            return "返回值"
+          }
+          let res=show();
+          console.log(res.next());
+          console.log(res.next());
+          console.log(res.next());
+          console.log(res.next());
+    6.let 
+        1.let是块级作用域
+        2.let  不会进行提前的说明
+        3.let不会进行变量的提升
+        4.let  不可以声明两次
+            代码:
+                 * let a=3;
+                 * let a=7;
+            注释:
+                这种情况会报错的
+    7.promise:
+          /* es6.ruanyifeng.com */
+          let p1 = new Promise(function (resolve, reject) {
+            //resolve("success");   //成功的时候,抛出的数据
+            reject("fail");          //失败的时候,抛出的数据
+          });
+          p1.then(function (res) {
+            console.log(res)
+          }, function (err) {
+            console.log(err)
+          })
+    8.字符串的使用:(字符串的扩展)
+        代码:
+            var d=12;
+            var a=12;
+            var b="nannananna";
+            var c=` ${a+d}======${ b }===${++a}
+
+                hello
+
+                world
+            `;
+            console.log(c);
+    9.结构函数的赋值:
+        代码:
+            let [a,[b,c]]=[12,[13,14]];
+            console.log(a,b,c)
+        代码2:
+            let {a,b,c}={a:12,c:14,b:13};
+            console.log(a,b,c)
+        代码3:
+            let [a,b,c]=[12,13,14];
+            console.log(a,b,c);
+        代码4:
+            let {a,[b,c]}=[12,{c:14,b:13}];
+            console.log(a,b,c);
+        注意:
+            解构  左右的结构一定要相同
+            
+    10.数组的复制(不是简单的地址复制):
+        方法1:
+          function add(...arr) {
+            console.log(arr);
+            console.log(arguments);
+            //arguments  不是数组的,不可以使用数组的方法的
+
+          }
+          add(1,2,3,4,5,6,7,8);
+        方法2:
+            var arr=[1,2,3];
+            var arr1=Array.from(arr);
+            console.log(arr1);
+    11.ES6函数的写法
+        1.匿名函数的写法:
+            ( 参数 )=>{  }  
+            //这个函数里面 argument不存在  this 向上找对象轰隆隆没那么吗   
+              
+        2.对象方法的写法:
+            对象={
+                方法:function(){  }
+            }  
+            在ES6中的写法:
+                对象={
+                    方法(){
+                        方法体 里面的内容
+                    }    
+                }
+    12.定时器的传参数:bind 方法
+        在JavaScript中，call、apply和bind是Function对象自带的三个方法，
+        这三个方法的主要作用是改变函数中的this指向
+      
+        参考:
+          https://www.cnblogs.com/libin-1/p/6069031.html
+          bind()
+              第一个参数,默认给了this--不会出现在arguments里面
+              第二个,是正常的传参数
+        关于MDN的解释:
+          bind()方法会创建一个新函数，称为绑定函数，
+          当调用这个绑定函数时，绑定函数会以创建它时传入 bind()方法的第一个参数作为 this，
+          传入 bind() 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数
+         注意：bind方法的返回值是函数
+       
+        测试代码:
+            let timer=setInterval(add.bind(this,"asd"),1000);
+            function add(a) {
+                console.log(this,a);
+            }
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+	

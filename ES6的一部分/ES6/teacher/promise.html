@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+</html>
+<script type="text/javascript">
+	/*let p1=new Promise(function(resolve,reject){
+		resolve("成功了，嘿嘿！！！")
+		//reject("失败是成功之母，继续加油！！")
+	})
+	
+	p1.then(function(res){
+		console.log(res)
+	},function(err){
+		console.log(err+"这个是失败输出")
+	})*/
+	
+	function *show(){
+		yield "hello";
+		yield "world";
+		yield "hi mr wang";
+		return "lisi"
+	}
+	
+	let res=show();
+	console.log(res.next());
+	console.log(res.next());
+	console.log(res.next());
+	console.log(res.next());
+	console.log(res.next());
+	console.log(res.next());
+	
+	
+	for(let m of show()){
+		document.write(m)
+	}
+	
+	
+</script>

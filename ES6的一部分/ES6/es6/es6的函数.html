@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<button type="button" id="btn">按钮</button>
+</body>
+<script>
+  //箭头函数的部分
+  let btn = document.getElementById("btn");
+  btn.onclick = () => {
+    console.log("执行了点击");
+    console.log(this);   //this 指向上层的函数
+    console.log(arguments);  //没有 arguments这个参数
+  };
+
+  //对象的简写方式
+  let name = "jkj";
+  let sex = "male";
+  let json = {
+    name,   //不需要  name:name   两个名字相同,是可以不写的
+    sex,
+    sayHello() {    //sayHello:function(){  }   不需要这样写了
+      alert("hello  word " + this.name);  //这里的this  指向没有改变,他不是箭头函数
+
+    }
+  };
+  console.log(json.name, json.sex);
+  //json.sayHello();
+
+  //构建一个类  就是ES5的一个构造器的写法而已
+  class Person {
+    constructor(name = "defaultName", sex = "defaultSex") {
+      this.name = name;
+      this.sex = sex;
+      console.log(this.name)
+    }
+
+    sayHello() {
+      console.log("hello " + this.name);
+    }
+  }
+
+  let p1 = new Person("jkj", "male");
+  //var  p1 = new Person("jkj", "male");
+  console.log(p1);
+  //p1.sayHello();
+
+  let p2=new Person();
+
+  alert(p1.sayHello===p2.sayHello);
+  alert((p1.sayHello===p2.sayHello)+"asd");  //这里不可以拼接,否则会出错,为什么
+</script>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>对象的继承</title>
+</head>
+<body>
+
+</body>
+<script>
+  class Person{
+    constructor(name="defaultName",sex="defaultSex"){
+      this.name=name;
+      this.sex=sex;
+    }
+    sayHello(){
+      console.log("hello word "+this.name);
+    }
+  }
+  let p=new Person();
+  class Worker extends Person{
+    constructor(name,sex,job){
+      super(name,sex);
+      this.job=job
+    }
+    sayHelloSon(){   //不会继承
+      super.sayHello();
+    }
+  }
+  var w=new Worker("jkj","male","首相");
+  w.sayHello();
+  w.sayHelloSon();
+
+</script>
+</html>

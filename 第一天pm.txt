@@ -1,0 +1,207 @@
+less
+    npm  lessc文件  新的node和lessc版本不匹配
+    就会出现问题了
+
+1.nodeJS的全局对象
+    1.概念
+        nodeJS的全局对象是global
+        1.在交互模式下
+            就是DOS后浏览器里面
+                全局变量就是global的属性(global的成员)
+            造成全局变量的污染问题
+        2.在脚本模式下
+            所谓的全局变量是当前文件的局部变量
+            不是global的成员
+            避免了污染全局对象
+    2.global的成员属性和成员方法
+        1.console
+            用于向stdout(标准输出)和stderr(标准错误)输出信息
+            1.向stdout输出日志信息:
+                console.log()  
+                console.info()
+                代码示例:
+                    var user={name:'tom',age:20};
+                    /*
+                    * 格式和C语言一样 %s 标识字符串类型 %d 标识number类型
+                    * */
+                    console.log('姓名:%s,年龄: %d',user.name,user.age);
+                    console.info('姓名:%s,年龄: %d',user.name,user.age);
+            2.向stderr输出错误信息:
+                console.error()
+                console.warn()
+            3.console.dir(user);   
+                向标准输出(sdout)指定对象的字符串表示
+            console.trace("hahah");
+                向标准错误输出(stderr)栈轨迹--就是堆栈结构
+            代码测试:
+                console.dir(user);   //向标准输出(sdout)指定对象的字符串表示
+                console.dir(Buffer,{ color:true });  //自己看看手册就好了
+            断言:
+                console.assert()
+                为真的断言,错误信息不会输出
+                为假的断言,抛出错误,输出错误信息,终止程序运行
+                代码:
+                    console.assert(add(10,20)==70,"自定义错误信息");
+                    function add(n1,n2) {
+                        return n1+n2
+                    }
+            4.测试代码的执行时间(配合使用)
+                console.time()
+                console.timeEnd()
+                代码:
+                    console.time("标识符"); //开始计时
+                    var sum=0;
+                    for(var i=0;i<10000000;i++){
+                        sum+=i;
+                    }
+                    console.timeEnd("标识符"); //结束计时
+
+        2.prosess进程
+            也是global的成员   
+            参考手册:
+                http://nodejs.cn/api/process.html
+                1.process.arch  //获取CPU的架构类型
+                2.process.platform  //获取操作系统的类型
+                3.process.evn   //获取环境变量PATH
+                4.process.cwd()  //获取当前的工作目录
+                5.process.execPath   //获得NodeJS解释器的所在目录
+                6.process.versions //获取nodeJS的运行时间
+                7.process.memotyUsage()  //获取内存信息
+                8.process.pid    //获取进程ID号
+                9.process.kill(pid)   //向指定进程ID号,发出退出指令
+            代码:
+                console.log(process.kill(6596));
+                拿来直接使用就可以了
+            
+        3.定时器:
+            gloable.的成员
+            1.gloable.setTimeout()   //一次性定时器
+                代码:
+                    //一次性定时器模拟周期性定时器
+                    var counter3=0;
+                    var timmer3=setTimeout(function () {
+                        counter3++;
+                        if (counter3<=5){
+                            console.log(counter3);
+                            setTimeout(arguments.callee,1000);
+                        }else {
+                            clearTimeout(timmer3);
+                        }
+                    },1000);
+                注释:
+                    这里的setTimeout()的使用
+                    事件可以使用,作为变量的
+                    setInterval()  只可以做匀速的事件
+                    
+            2.gloable.setInterval()  //周期性定时器
+            3.gloable.setImmediate()  
+                在下次事件循环开始之前立即执行的计时器
+            4.process.nextTick()
+                本次事件循环结束之后立即执行的定时器
+            代码:
+                定时器的运行时间的测试
+                console.log("begin");
+                setImmediate(function () {
+                    console.log("setImmediate1.....")
+                });
+                process.nextTick(function () {
+                    console.log("nextTick1......")
+                });
+                setTimeout(function () {
+                    console.log("setTimeout......");
+                },100);
+                setImmediate(function () {
+                    console.log("setImmediate2.....")
+                });
+                process.nextTick(function () {
+                    console.log("nextTick2......")
+                });
+                console.log("end");
+            运行结果:
+                begin
+                end
+                nextTick1......
+                nextTick2......
+                setImmediate1.....
+                setImmediate2.....
+                setTimeout......
+2.模块系统:
+    1.概念:
+        nodeJS 使用"Module(模块)",来规划不同的功能对象;
+            类似于包,命名空间  --package
+    2.模块的分类:
+        1.核心模块---nideJS的内置模块
+        2.第三方模块
+        3.自定义模块
+    3.模块的作用域:
+        每加载一个JS文件,就是一个模块对象,包含响应的功能核函数.
+        模块中声明的变量和函数的作用域叫做"模块作用域",这些变量和函数都不是global的成员
+        默认只能在当前的JS文件(当前模块)中使用
+    4.主模块:    
+        nideJS启动的时候,运行的第一个模块,叫做主模块---main module,也是自身模块
+            获取主模块的对象方法:
+                process.mainModule
+                require.main
+            除了主模块之外,其他模块都成为子模块
+            默认情况下,某个模块不可以使用其他模块封装的数据,
+            但是每个模块可以导出(exports)自己内部的数据,给其他的使用,也可以引入(require)并使用其他模块导出的对象
+    5.指向当前模块自己:(判断当前模块是否是主模块)        
+        每一个模块内部都可以使用一个变量:module,指向当前的模块自己
+        代码:(判断主模块)
+            //指向主模块的对象
+            console.log(process.mainModule);
+            console.log(require.main);
+
+            //获取当前模块自己
+            console.log(module);
+
+            //判断当前模块是否是主模块
+            console.log(module===require.main);
+    6.模块的引入:
+        代码:
+            var fs=require("fs");  //文件系统模块
+            // ./ 表示当前的路径]
+            /*
+            * 读取不到: err 保存错误
+            * 读取到了:
+            *   data -- 保存读取的数据
+            * */
+            fs.readFile('./1.js',(err,data)=>{
+                if(err){
+                    console.log("文件读取失败");
+                    console.log(err);
+                }else{
+                    console.log("文件读取成功");
+                    console.log(data); //16进制的数据
+                }
+            });
+        注意:
+            在交互的模式下面:
+                nodeJS的模块无需引入,直接使用 模块名调用方法和属性就好
+            
+        注释:
+            核心模块---有些不需要引入就可以使用(console),有些也是引入才可以使用(fs)
+            模块的JS的核心(非常重要的)
+                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            

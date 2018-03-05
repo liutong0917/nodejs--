@@ -1,0 +1,6 @@
+ D:\Windows\system32;D:\Windows;D:\Windows\System32\Wbem;D:\Windows\System32\WindowsPowerShell\v1.0\;G:\xampp\mysql\bin\;G:\jdk1.6\Java\jdk1.6.0_34\bin;G:\tomCat\apache-tomcat-6.0.30\apache-tomcat-6.0.30\bin;G:\git\Git\bin;D:\Users\jasin\AppData\Local\Programs\Fiddler;G:\XAMPP\mysql\bin;D:\Users\jasin\AppData\Roaming\npm
+
+ D:\Windows\system32;D:\Windows;D:\Windows\System32\Wbem;D:\Windows\System32\WindowsPowerShell\v1.0\;G:\xampp\mysql\bin\;G:\jdk1.6\Java\jdk1.6.0_34\bin;G:\tomCat\apache-tomcat-6.0.30\apache-tomcat-6.0.30\bin;G:\git\Git\bin;G:\nodeJS\npm
+
+
+path的环境变量备份

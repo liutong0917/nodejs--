@@ -1,0 +1,174 @@
+day03 pm 最后一个下午了
+    1.返回固定响应的代码--不管请求什么,都返回这个
+    代码:
+        //创建服务器--给客户响应
+        //1.引入http模块
+        var http=require("http");
+        //2.创建服务器
+        var sever=http.createServer();
+        //3.http.Sever的request事件绑定处理函数
+        sever.on("request",(req,res)=>{
+            console.log("接收到了客户端的请求");
+            res.statusCode=200;  //设置响应的状态码
+            res.setHeader("Content-Type","text/html;charset=UTF-8"); //设置响应消息头
+            res.write("<html>");//向客户端输出的主体内容--追加(不会覆盖的)
+            res.write("<h1>北京欢迎你啊</h1>");
+            res.write("</html>");//向客户端输出的主体内容--追加(不会覆盖的)
+            res.end();  //主体内容构建完毕,向客户端发送响应
+
+        });
+        //启动服务器,监听8000端口
+        sever.listen(8000,"127.0.0.1",(err)=>{
+           if(err){
+               console.log("服务器启动失败");
+           } else{
+                console.log("服务器启动成功,正在监听8000端口");
+           }
+        });
+    2.黄金组合
+        MEAN
+        moogdb+express(nodeJS的模块)+A(angular)+n(nodeJS)
+    3.开始学数据库模块  MySQL
+        SQL语句 --复习开始
+        方法:
+            createConection() 方法//用于创建一个mydql服务器的链接  
+        返回值:
+            返回连接对象,该对象有以下方法:
+                1.connect()  //链接数据库
+                2.query()   //提交sql语句,给mysql服务器执行
+                3.end()  //断开与mysql的服务器的链接
+        长见识了:
+            1.进入mysql数据库
+            2.sourse  +(把sql文件拖进来--就可以执行了)
+        查询语句的代码:
+            //查询mysql数据库中的数据
+            var mysql = require("mysql");
+            //连接到mysql服务器
+            var options = {  //这里使用root
+                host:"127.0.0.1",
+                port: 3306,
+                user: "root",
+                password:"",
+                database:"user_0120"
+            };
+            var conn = mysql.createConnection(options);
+            conn.connect();  //可以省略
+            //提交sql语句,给mysql语句执行
+            var sql="SELECT * FROM user";    //这里的from和form 写错了
+            conn.query(sql,(err,rows)=>{
+                if(err){
+                    console.log(`数据查询失败了${err}`)
+                }else{
+                    console.log("查询完成");
+                    console.log(rows);
+                    for(var i=0;i<rows.length;i++){
+                        console.log(`用户名:${rows[i].uname}密码:${rows[i].upwd}`);
+                    }
+                }
+            });
+            //断开与数据库的链接
+            conn.end();
+        写入数据的代码:
+            //向mysql数据中插入数据
+            //引入模块
+            var mysql=require("mysql");
+            //创建链接
+            var options={
+                host:"127.0.0.1",
+                port: 3306,
+                user: "root",
+                password:"",
+                database:"user_0120"
+            };
+            var conn=mysql.createConnection(options);
+
+            //提交sql语句
+            var sql='INSERT INTO user VALUES(NULL,"Jack","111")';
+            conn.query(sql,(err,data)=>{
+               if(err){
+                   console.log("写入数据失败")
+               } else{
+                   console.log("写入数据成功");
+                   console.log(data);
+                   console.log(data.affectedRows);
+                   console.log(data.insertId);
+               }
+            });
+
+            //断开链接
+            conn.end();
+
+        动态服务器的代码模块
+2.express模块
+    创建路由
+    app.method(path,[ 中间件(middleware),]function(req,res){})
+        path 用户请求的路径
+        代码1:
+            var express=require("express");
+            //实例化--作为服务器(创建服务器)
+            var app=express();
+            //启动服务器
+            app.listen(8009);
+
+            //express 的访问静态资源的方式
+            //app.use("/h",express.static("html"));  //使用 h来代替html,html目录
+            app.use(express.static(__dirname));    //访问任何目录都正常返回,
+
+            app.get('../html/login.do',(req,res)=>{
+
+            })app.get('../html/redister.do',(req,res)=>{
+
+            })
+        代码2:
+            var express=require("express");
+            //实例化--作为服务器(创建服务器)
+            var app=express();
+            //启动服务器
+            app.listen(8008);
+            app.get("/",function (req,res) {   //不需要加"."
+                res.send("您访问的是根目录")
+            });
+
+            app.get("/html/index.html",function (req,res) {
+                res.send("您访问的HTML是根目录")
+            });
+
+            //使用正则匹配
+            app.get(/\/html/,function (req,res) {
+                res.send("您访问的正则匹配")
+            });
+
+            //express 的访问静态资源的方式
+            app.use("h",express.static("html"))
+    中间件:
+        非常重要的---起源于connect()
+        app.all()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

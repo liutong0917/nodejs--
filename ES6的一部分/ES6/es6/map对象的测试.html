@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>map</title>
+</head>
+<body>
+
+</body>
+<script>
+    //创建  map对象
+    var map = new Map();
+    console.log(map.size);
+    console.log(typeof map);
+
+    map.set('name', 'jkj');
+    map.set('sex', 'male');
+    console.log(map.get("name"));
+
+    //for of 就是为他准备的
+    for (let index of map) {
+        console.log(index);
+    }
+    //解构的方法
+    for (let [key, val] of map) {
+        console.log(key, val);
+    }
+    for (let [...arr] of map) {
+        console.log(arr);
+    }
+
+    for (let item of map.entries()) {
+        console.log(item);
+    }
+    for (let key of map.keys()) {
+        console.log(key);
+    }
+    for (let val of map.values()) {
+        console.log(val)
+    }
+
+
+</script>
+</html>
